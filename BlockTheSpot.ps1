@@ -123,13 +123,15 @@ Copy-Item -LiteralPath $patchFiles -Destination "$SpotifyDirectory"
 # Disabling auto-update
 Write-Host 'Disabling Auto-Updates...'`n
 if ((test-path $SpotifyUpdateDirectory)) {
-  icacls "$SpotifyUpdateDirectory" /reset /T >$null 2>&1
+  cmd /c icacls "$SpotifyUpdateDirectory" /reset /T >$null 2>&1
   Remove-Item "$SpotifyUpdateDirectory" -Force >$null 2>&1
   mkdir "$SpotifyUpdateDirectory" >$null 2>&1
-  icacls "$SpotifyUpdateDirectory" /deny "$env:UserName":W >$null 2>&1
+  cmd /c icacls "$SpotifyUpdateDirectory" /deny %username%:W >$null 2>&1
 }
-Remove-Item -LiteralPath "$SpotifyDirectory\SpotifyMigrator.exe"
-Remove-Item -LiteralPath "$SpotifyDirectory\SpotifyStartupTask.exe"
+if ((test-path "$SpotifyDirectory\SpotifyMigrator.exe")) {
+  Remove-Item -LiteralPath "$SpotifyDirectory\SpotifyMigrator.exe" >$null 2>&1
+  Remove-Item -LiteralPath "$SpotifyDirectory\SpotifyStartupTask.exe" >$null 2>&1
+}
 
 # Clean up
 $tempDirectory = $PWD

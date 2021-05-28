@@ -78,6 +78,32 @@ if ($rm) {
   exit
 }
 
+# Install spicetify
+Invoke-WebRequest -UseBasicParsing "https://raw.githubusercontent.com/khanhas/spicetify-cli/master/install.ps1" | Invoke-Expression
+Push-Location -LiteralPath "$env:USERPROFILE\.spicetify\Themes"
+if (Test-Path -Path "$env:USERPROFILE\.spicetify\Themes\SpotifyNoPremium") {
+  Push-Location -LiteralPath "SpotifyNoPremium"
+  git pull -q
+} else {
+  git clone -q https://github.com/Daksh777/SpotifyNoPremium
+}
+spicetify
+spicetify config current_theme SpotifyNoPremium
+if (Test-Path -Path "$env:USERPROFILE\.spicetify\Backup") {
+  Remove-Item -LiteralPath "$env:USERPROFILE\.spicetify\Backup" -Recurse
+  spicetify backup apply
+  Start-Sleep -Seconds 5
+  Stop-Process -Name Spotify >$null 2>&1
+  Stop-Process -Name SpotifyWebHelper >$null 2>&1
+  Stop-Process -Name SpotifyFullSetup >$null 2>&1
+} else {
+  spicetify backup apply
+  Start-Sleep -Seconds 5
+  Stop-Process -Name Spotify >$null 2>&1
+  Stop-Process -Name SpotifyWebHelper >$null 2>&1
+  Stop-Process -Name SpotifyFullSetup >$null 2>&1
+}
+
 # Setup environment
 Push-Location -LiteralPath $env:TEMP
 try {

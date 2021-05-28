@@ -62,23 +62,22 @@ if (-not $spotifyInstalled) {
 }
 
 # Uninstall patch if user wants
-if ($rm) {
-  $ch = Read-Host -Prompt "Remove BlockTheSpot? (y/N)"
-  if ($ch -eq 'y') {
-    Write-Host `n'Removing patch...'`n
-    Remove-Item -LiteralPath $SpotifyDirectory\chrome_elf.dll >$null 2>&1
-    Move-Item $SpotifyDirectory\chrome_elf.dll.bak $SpotifyDirectory\chrome_elf.dll >$null 2>&1
-    Write-Host 'Patch removed'`n -ForegroundColor Green
-    Write-Host 'Starting Spotify...'`n
-    Start-Process -WorkingDirectory $SpotifyDirectory -FilePath $SpotifyExecutable
-    Write-Host 'Done.'`n
-  }
-  $rm = $false
-  Write-Host 'Exiting...'`n
+$ch = Read-Host -Prompt "Are you removing BlockTheSpot? (y/N)"
+if ($ch -eq 'y') {
+  Write-Host `n'Removing patch...'`n
+  Remove-Item -LiteralPath $SpotifyDirectory\chrome_elf.dll >$null 2>&1
+  Move-Item $SpotifyDirectory\chrome_elf.dll.bak $SpotifyDirectory\chrome_elf.dll >$null 2>&1
+  Write-Host 'Patch removed'`n -ForegroundColor Green
+  Write-Host 'Starting Spotify...'`n
+  Start-Process -WorkingDirectory $SpotifyDirectory -FilePath $SpotifyExecutable
+  Write-Host 'Done.'`n
+  Start-Sleep -Seconds 5
   exit
 }
 
 # Install spicetify
+$ch = Read-Host -Prompt "Install Spicetify? (y/N)"
+if ($ch -eq 'y') {
 Invoke-WebRequest -UseBasicParsing "https://raw.githubusercontent.com/khanhas/spicetify-cli/master/install.ps1" | Invoke-Expression
 Push-Location -LiteralPath "$env:USERPROFILE\.spicetify\Themes"
 if (Test-Path -Path "$env:USERPROFILE\.spicetify\Themes\SpotifyNoPremium") {
@@ -102,6 +101,7 @@ if (Test-Path -Path "$env:USERPROFILE\.spicetify\Backup") {
   Stop-Process -Name Spotify >$null 2>&1
   Stop-Process -Name SpotifyWebHelper >$null 2>&1
   Stop-Process -Name SpotifyFullSetup >$null 2>&1
+}
 }
 
 # Setup environment

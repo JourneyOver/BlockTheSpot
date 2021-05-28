@@ -5,7 +5,7 @@ $PSDefaultParameterValues['Stop-Process:ErrorAction'] = 'SilentlyContinue'
 $SpotifyDirectory = "$env:APPDATA\Spotify"
 $SpotifyUpdateDirectory = "$env:LOCALAPPDATA\Spotify\Update"
 $SpotifyExecutable = "$SpotifyDirectory\Spotify.exe"
-$spotifyInstalled = (Test-Path -LiteralPath $SpotifyExecutable)
+$SpotifyInstalled = (Test-Path -LiteralPath $SpotifyExecutable)
 
 # Stop Spotify
 Write-Host `n'Stopping Spotify...'`n -ForegroundColor Yellow
